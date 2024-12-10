@@ -77,12 +77,17 @@ app.use(express.json());
 app.get('/api/texts/:number', async (req, res) => {
     try {
         const text = await Text.findOne({ number: req.params.number });
-        res.json({ text: text?.text || '' });
+        // Return empty text if document doesn't exist
+        res.json({ 
+            text: text?.text || '',
+            exists: !!text 
+        });
     } catch (error) {
         console.error('Error getting text:', error);
         res.status(500).json({ error: 'Failed to get text' });
     }
 });
+
 
 app.post('/api/texts/:number', async (req, res) => {
     try {
