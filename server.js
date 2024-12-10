@@ -10,7 +10,7 @@ app.use(cors({
     origin: 'https://yonlad.github.io',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
-    credentials: true
+    credentials: false 
 }));
 
 // Log environment variables (without sensitive info)
