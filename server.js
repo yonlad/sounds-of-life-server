@@ -5,22 +5,33 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 
+// Log environment variables (without sensitive info)
+console.log('Environment variables loaded:', {
+    MONGODB_URI_EXISTS: !!process.env.MONGODB_URI,
+    NODE_ENV: process.env.NODE_ENV
+});
+
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined in environment variables!');
+    process.exit(1); // Exit if no connection string is provided
+}
+
 // Connection options
 const mongooseOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     retryWrites: true,
     w: 'majority'
 };
 
-
 // Connect to MongoDB with retry logic
 const connectWithRetry = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
+        console.log('Attempting to connect to MongoDB...');
+        await mongoose.connect(MONGODB_URI, mongooseOptions);
         console.log('Successfully connected to MongoDB.');
     } catch (err) {
         console.error('MongoDB connection error:', err);
+        console.log('Connection string format:', MONGODB_URI.replace(/:[^:]*@/, ':****@')); // Log format without password
         console.log('Retrying connection in 5 seconds...');
         setTimeout(connectWithRetry, 5000);
     }
@@ -28,6 +39,8 @@ const connectWithRetry = async () => {
 
 // Initial connection
 connectWithRetry();
+
+
 
 // Monitor the connection
 mongoose.connection.on('error', err => {
