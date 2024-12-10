@@ -5,11 +5,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 
-// Add the CORS middleware
+// CORS configuration
 app.use(cors({
     origin: 'https://yonlad.github.io',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
     credentials: true
-  }));
+}));
 
 // Log environment variables (without sensitive info)
 console.log('Environment variables loaded:', {
