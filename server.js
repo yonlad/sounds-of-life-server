@@ -7,7 +7,7 @@ const app = express();
 
 // Add the CORS middleware
 app.use(cors({
-    origin: 'https://yonlad.github.io',
+    origin: 'https://yonlad.github.io/sounds-of-life-react/',
     credentials: true
   }));
 
